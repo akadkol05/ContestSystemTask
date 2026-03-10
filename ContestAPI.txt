@@ -1,0 +1,81 @@
+{
+	"info": {
+		"name": "Contest System API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"testuser\",\n    \"email\": \"test@example.com\",\n    \"password\": \"Password123!\",\n    \"role\": \"Normal\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": { "raw": "https://localhost:44344/api/Auth/register" }
+					}
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test@example.com\",\n    \"password\": \"Password123!\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": { "raw": "https://localhost:44344/api/Auth/login" }
+					}
+				}
+			]
+		},
+		{
+			"name": "Contests",
+			"item": [
+				{
+					"name": "Get Available Contests",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "PASTE_TOKEN_HERE", "type": "string" }] },
+						"method": "GET",
+						"url": { "raw": "https://localhost:44344/api/Contest" }
+					}
+				},
+				{
+					"name": "Submit Contest Answers",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "PASTE_TOKEN_HERE", "type": "string" }] },
+						"method": "POST",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"contestId\": 1,\n    \"answers\": [\n        { \"questionId\": 1, \"optionId\": 1 }\n    ]\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": { "raw": "https://localhost:44344/api/Contest/submit" }
+					}
+				},
+				{
+					"name": "Get My Participation History",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "PASTE_TOKEN_HERE", "type": "string" }] },
+						"method": "GET",
+						"url": { "raw": "https://localhost:44344/api/Contest/history" }
+					}
+				},
+				{
+					"name": "Get Global Leaderboard",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "PASTE_TOKEN_HERE", "type": "string" }] },
+						"method": "GET",
+						"url": { "raw": "https://localhost:44344/api/Contest/leaderboard" }
+					}
+				}
+			]
+		}
+	]
+}
