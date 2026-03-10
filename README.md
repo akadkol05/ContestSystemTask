@@ -1,41 +1,43 @@
-# ContestSystemTask
-A robust, role-based RESTful API built with ASP.NET Core 7.0 and Entity Framework Core. This system manages contest lifecycles, real-time scoring logic, and user leaderboards with tiered access for Guest, Normal, and VIP users.
+Contest Participation System API
+A professional, role-based RESTful API built with ASP.NET Core 7.0 and Entity Framework Core. This system manages contest lifecycles, real-time scoring logic, and user leaderboards with tiered access for Guests, Normal Users, and VIPs.
 
 Key Features
 1. Advanced Authentication & Authorization
-JWT Bearer Tokens: Secure identity management.
+JWT Bearer Tokens: Secure identity management and session handling.
 
-Role-Based Access Control (RBAC): * Guest: Can view public contest metadata only.
+Role-Based Access Control (RBAC):
+
+Guest: Can view public contest metadata.
 
 Normal User: Can participate in "Normal" contests.
 
-VIP User: Full access to high-stakes "VIP" contests and prizes.
+VIP User: Full access to high-stakes "VIP" contests and exclusive prizes.
 
 2. Contest & Question Engine
-Support for Multiple Types: Single-select, Multi-select, and True/False questions.
+Flexible Question Types: Logic built for Single-select, Multi-select, and True/False questions.
 
-Automatic Scoring: Real-time calculation of scores upon submission by comparing user answers against encrypted database options.
+Automatic Scoring: Real-time calculation upon submission by comparing user answers against database records.
 
-Navigation Properties: Optimized SQL queries using .Include() to fetch nested questions and options in a single database round-trip.
+Optimized Queries: Uses Eager Loading (.Include()) to fetch questions and options in a single database round-trip.
 
 3. Leaderboard & User History
-Ranking System: Global leaderboard calculated via LINQ grouping.
+Global Ranking: A dynamic leaderboard calculated via LINQ grouping and aggregation.
 
-Personal Dashboard: Users can track their participation history and prizes won.
+User Dashboard: Participants can track their history of joined contests, scores, and prizes won.
 
 4. Enterprise-Grade Stability
-Rate Limiting: Implemented fixed-window limiting (10 requests per 10 seconds) to prevent brute-force attacks and API abuse.
+Rate Limiting: Implemented Fixed-Window Limiting (10 requests / 10 seconds) to prevent API abuse.
 
-Global Error Handling: Structured JSON responses for all edge cases (401 Unauthorized, 403 Forbidden, 400 Bad Request).
+Global Error Handling: Clean, structured JSON responses for edge cases (401, 403, 400).
 
-Database Migrations: Fully versioned schema using EF Core Migrations.
+Code-First Migrations: Fully versioned database schema management.
 
 Technical Stack
 Framework: .NET 7.0 Web API
 
 ORM: Entity Framework Core
 
-Database: Microsoft SQL Server (LocalDB / SQLEXPRESS)
+Database: Microsoft SQL Server (SQLEXPRESS / LocalDB)
 
 Security: JWT (System.IdentityModel.Tokens.Jwt), BCrypt.Net (Password Hashing)
 
@@ -54,35 +56,44 @@ Apply the migrations to create the schema:
 PowerShell
 dotnet tool run dotnet-ef database update
 2. Running the Application
-Press F5 in Visual Studio or run:
+Via Visual Studio (IIS Express)
+Open ContestSystem.sln in Visual Studio 2022.
 
+Ensure IIS Express (the green play button) is selected in the toolbar.
+
+Press F5. The browser will launch the Swagger UI at /swagger/index.html.
+
+Via .NET CLI
 PowerShell
 dotnet run
-The API will launch at https://localhost:44344/swagger/index.html.
-
 3. Data Seeding
-The system includes a DbSeeder class that automatically populates the database with:
+The system includes an automatic DbSeeder that populates the database on the first run with:
 
-A Normal Contest (General Knowledge)
+Normal Contest: "General Knowledge Quiz"
 
-A VIP Contest (Crypto Masters)
+VIP Contest: "Crypto Masters VIP"
 
-Sample questions and correct answers.
+Pre-configured questions, options, and correct answers.
 
 Testing with Postman
-A Postman Collection is included in the repository.
+The Postman Collection is included in the root of this repository as:
+ContestSystem.postman_collection.json.
 
-Register a new user with the role "Normal" or "VIP".
+Testing Workflow:
 
-Login to receive your JWT Token.
+Import: Drag the .json file into Postman.
 
-In all subsequent requests, add the token under Authorization > Bearer Token.
+Register: Create a user (Role: Normal or VIP).
 
-Project Structure
-/Controllers: API endpoints for Auth and Contests.
+Login: Copy the token from the response.
 
-/Models: Database entities (User, Contest, Question, Submission).
+Authorize: In other requests, go to the Auth tab, select Bearer Token, and paste your token.
 
-/Data: DbContext and Seeding logic.
+ Project Structure
+/Controllers: API endpoints for Authentication, Contest retrieval, and Submissions.
 
-/DTOs: Data Transfer Objects for clean API request/response handling.
+/Models: Database entities (User, Contest, Question, Option, Submission).
+
+/Data: AppDbContext, Migrations, and DbSeeder.
+
+/DTOs: Data Transfer Objects for decoupled request/response handling.
