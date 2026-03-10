@@ -7,6 +7,7 @@ E:\ContestSystemTask\ContestSystem.Api\bin\Debug\net7.0\ContestSystem.Api.dll
 E:\ContestSystemTask\ContestSystem.Api\bin\Debug\net7.0\ContestSystem.Api.pdb
 E:\ContestSystemTask\ContestSystem.Api\bin\Debug\net7.0\Azure.Core.dll
 E:\ContestSystemTask\ContestSystem.Api\bin\Debug\net7.0\Azure.Identity.dll
+E:\ContestSystemTask\ContestSystem.Api\bin\Debug\net7.0\BCrypt.Net-Next.dll
 E:\ContestSystemTask\ContestSystem.Api\bin\Debug\net7.0\Humanizer.dll
 E:\ContestSystemTask\ContestSystem.Api\bin\Debug\net7.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 E:\ContestSystemTask\ContestSystem.Api\bin\Debug\net7.0\Microsoft.AspNetCore.OpenApi.dll
@@ -75,4 +76,3 @@ E:\ContestSystemTask\ContestSystem.Api\obj\Debug\net7.0\refint\ContestSystem.Api
 E:\ContestSystemTask\ContestSystem.Api\obj\Debug\net7.0\ContestSystem.Api.pdb
 E:\ContestSystemTask\ContestSystem.Api\obj\Debug\net7.0\ContestSystem.Api.genruntimeconfig.cache
 E:\ContestSystemTask\ContestSystem.Api\obj\Debug\net7.0\ref\ContestSystem.Api.dll
-E:\ContestSystemTask\ContestSystem.Api\bin\Debug\net7.0\BCrypt.Net-Next.dll

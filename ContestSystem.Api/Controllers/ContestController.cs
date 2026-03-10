@@ -22,32 +22,34 @@ namespace ContestSystem.Api.Controllers
         {
             var userRole = User.FindFirstValue(ClaimTypes.Role);
 
-            // Logic: If Normal, hide VIP. If VIP/Admin, show all.
-            var contests = await _context.Contests
-                .Where(c => userRole == "VIP" || userRole == "Admin" || c.AccessLevel == "Normal")
-                .ToListAsync();
-
-            return Ok(contests);
+            return Ok(await _context.Contests
+                .Include(c => c.Questions)
+                    .ThenInclude(q => q.Options)
+                .Where(c => userRole == "Admin" || userRole == "VIP" || c.AccessLevel == "Normal")
+                .ToListAsync());
         }
 
+        [Authorize]
         [HttpPost("submit")]
         public async Task<IActionResult> SubmitContest(SubmissionDto submission)
         {
-            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            // FIX: Get the ID from the token correctly
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userIdClaim)) return Unauthorized("Session expired. Please login again.");
+
+            int userId = int.Parse(userIdClaim);
             int totalScore = 0;
 
             foreach (var answer in submission.Answers)
             {
-                var isCorrect = await _context.Options
-                    .AnyAsync(o => o.Id == answer.OptionId && o.IsCorrect && o.QuestionId == answer.QuestionId);
+                // Check if this specific option is marked as 'IsCorrect' in the DB
+                var option = await _context.Options
+                    .FirstOrDefaultAsync(o => o.Id == answer.OptionId && o.QuestionId == answer.QuestionId);
 
-                if (isCorrect)
+                if (option != null && option.IsCorrect)
                 {
-                    var points = await _context.Questions
-                        .Where(q => q.Id == answer.QuestionId)
-                        .Select(q => q.Points)
-                        .FirstOrDefaultAsync();
-                    totalScore += points;
+                    var question = await _context.Questions.FindAsync(answer.QuestionId);
+                    totalScore += question?.Points ?? 0;
                 }
             }
 
@@ -62,17 +64,28 @@ namespace ContestSystem.Api.Controllers
             _context.Submissions.Add(newSubmission);
             await _context.SaveChangesAsync();
 
-            return Ok(new { Score = totalScore, Message = "Contest Submitted!" });
+            return Ok(new { score = totalScore, message = "Successfully submitted!" });
         }
         // 1. Get User History
         [HttpGet("history")]
         public async Task<IActionResult> GetMyHistory()
         {
-            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null) return Unauthorized();
+
+            var userId = int.Parse(userIdClaim);
+
             var history = await _context.Submissions
                 .Where(s => s.UserId == userId)
-                .Include(s => s.Contest) // Shows the name of the contest
+                .Include(s => s.Contest)
                 .OrderByDescending(s => s.SubmittedAt)
+                .Select(s => new {
+                    ContestName = s.Contest.Name,
+                    Score = s.Score,
+                    Date = s.SubmittedAt,
+                   
+                    PrizeWon = s.Score > 0 ? s.Contest.Prize : "No Prize"
+                })
                 .ToListAsync();
 
             return Ok(history);
