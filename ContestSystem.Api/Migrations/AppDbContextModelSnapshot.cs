@@ -55,6 +55,48 @@ namespace ContestSystem.Api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Contests");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AccessLevel = "Normal",
+                            Description = "General Knowledge",
+                            EndTime = new DateTime(2026, 3, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Basic C# Quiz",
+                            Prize = "Bronze Medal",
+                            StartTime = new DateTime(2026, 3, 11, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AccessLevel = "Normal",
+                            Description = "Database Quiz",
+                            EndTime = new DateTime(2026, 3, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "SQL Logic",
+                            Prize = "Silver Medal",
+                            StartTime = new DateTime(2026, 3, 11, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            AccessLevel = "VIP",
+                            Description = "Pro Level",
+                            EndTime = new DateTime(2026, 3, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "VIP Algorithms",
+                            Prize = "Gold Trophy",
+                            StartTime = new DateTime(2026, 3, 11, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 4,
+                            AccessLevel = "VIP",
+                            Description = "Architecture",
+                            EndTime = new DateTime(2026, 3, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "System Design",
+                            Prize = "Platinum Trophy",
+                            StartTime = new DateTime(2026, 3, 11, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 
             modelBuilder.Entity("ContestSystem.Api.Models.Option", b =>
@@ -80,6 +122,71 @@ namespace ContestSystem.Api.Migrations
                     b.HasIndex("QuestionId");
 
                     b.ToTable("Options");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            IsCorrect = true,
+                            QuestionId = 1,
+                            Text = "System.Object"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            IsCorrect = false,
+                            QuestionId = 1,
+                            Text = "System.Base"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            IsCorrect = true,
+                            QuestionId = 2,
+                            Text = "HAVING"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            IsCorrect = false,
+                            QuestionId = 2,
+                            Text = "WHERE"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            IsCorrect = true,
+                            QuestionId = 3,
+                            Text = "Merge Sort"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            IsCorrect = true,
+                            QuestionId = 3,
+                            Text = "Quick Sort"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            IsCorrect = false,
+                            QuestionId = 3,
+                            Text = "Bubble Sort"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            IsCorrect = true,
+                            QuestionId = 4,
+                            Text = "Scalability"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            IsCorrect = false,
+                            QuestionId = 4,
+                            Text = "Monolithic simplicity"
+                        });
                 });
 
             modelBuilder.Entity("ContestSystem.Api.Models.Question", b =>
@@ -109,6 +216,40 @@ namespace ContestSystem.Api.Migrations
                     b.HasIndex("ContestId");
 
                     b.ToTable("Questions");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ContestId = 1,
+                            Points = 10,
+                            Text = "What is the base class for all types in .NET?",
+                            Type = "Single"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ContestId = 2,
+                            Points = 20,
+                            Text = "Which SQL clause is used to filter groups?",
+                            Type = "Single"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ContestId = 3,
+                            Points = 50,
+                            Text = "Which algorithms are O(n log n)?",
+                            Type = "Multi"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ContestId = 4,
+                            Points = 100,
+                            Text = "What is the primary benefit of microservices?",
+                            Type = "Single"
+                        });
                 });
 
             modelBuilder.Entity("ContestSystem.Api.Models.Submission", b =>
@@ -122,6 +263,9 @@ namespace ContestSystem.Api.Migrations
                     b.Property<int>("ContestId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("bit");
+
                     b.Property<int>("Score")
                         .HasColumnType("int");
 
@@ -132,6 +276,10 @@ namespace ContestSystem.Api.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ContestId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Submissions");
                 });
@@ -152,8 +300,9 @@ namespace ContestSystem.Api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Role")
-                        .HasColumnType("int");
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Username")
                         .IsRequired()
@@ -162,6 +311,16 @@ namespace ContestSystem.Api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Email = "admin@gmail.com",
+                            PasswordHash = "$2a$11$QzPSQb09h3uGAQP5n20sHuJgtPJmlBvHdn5DgfzbvGMJ1y6I0XKGi",
+                            Role = "3",
+                            Username = "SuperAdmin"
+                        });
                 });
 
             modelBuilder.Entity("ContestSystem.Api.Models.Option", b =>
@@ -180,6 +339,25 @@ namespace ContestSystem.Api.Migrations
                         .HasForeignKey("ContestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ContestSystem.Api.Models.Submission", b =>
+                {
+                    b.HasOne("ContestSystem.Api.Models.Contest", "Contest")
+                        .WithMany()
+                        .HasForeignKey("ContestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ContestSystem.Api.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Contest");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ContestSystem.Api.Models.Contest", b =>

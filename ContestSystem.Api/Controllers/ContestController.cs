@@ -5,108 +5,176 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using Microsoft.AspNetCore.RateLimiting;
 
-namespace ContestSystem.Api.Controllers
+[Route("api/[controller]")]
+[ApiController]
+[EnableRateLimiting("fixed")] // Enforces the rate limit you set in Program.cs
+public class ContestController : ControllerBase
 {
-    [Authorize]
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ContestController : ControllerBase
+    private readonly AppDbContext _context;
+    public ContestController(AppDbContext context) => _context = context;
+
+    [HttpGet]
+    public async Task<IActionResult> GetContests()
     {
-        private readonly AppDbContext _context;
-
-        public ContestController(AppDbContext context) { _context = context; }
-
-        [HttpGet]
-        public async Task<IActionResult> GetContests()
+        try
         {
-            var userRole = User.FindFirstValue(ClaimTypes.Role);
+            var role = User.FindFirstValue(ClaimTypes.Role);
 
-            return Ok(await _context.Contests
+            // Use Include and ThenInclude to pull the seeded Questions and Options
+            var query = _context.Contests
                 .Include(c => c.Questions)
                     .ThenInclude(q => q.Options)
-                .Where(c => userRole == "Admin" || userRole == "VIP" || c.AccessLevel == "Normal")
-                .ToListAsync());
+                .AsQueryable();
+
+            // Access Level Logic
+            if (string.IsNullOrEmpty(role) || role == "1")
+                query = query.Where(c => c.AccessLevel == "Normal");
+
+            var results = await query.ToListAsync();
+            return Ok(results);
         }
-
-        [Authorize]
-        [HttpPost("submit")]
-        public async Task<IActionResult> SubmitContest(SubmissionDto submission)
+        catch (Exception ex)
         {
-            // FIX: Get the ID from the token correctly
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrEmpty(userIdClaim)) return Unauthorized("Session expired. Please login again.");
-
-            int userId = int.Parse(userIdClaim);
-            int totalScore = 0;
-
-            foreach (var answer in submission.Answers)
-            {
-                // Check if this specific option is marked as 'IsCorrect' in the DB
-                var option = await _context.Options
-                    .FirstOrDefaultAsync(o => o.Id == answer.OptionId && o.QuestionId == answer.QuestionId);
-
-                if (option != null && option.IsCorrect)
-                {
-                    var question = await _context.Questions.FindAsync(answer.QuestionId);
-                    totalScore += question?.Points ?? 0;
-                }
-            }
-
-            var newSubmission = new Submission
-            {
-                UserId = userId,
-                ContestId = submission.ContestId,
-                Score = totalScore,
-                SubmittedAt = DateTime.UtcNow
-            };
-
-            _context.Submissions.Add(newSubmission);
-            await _context.SaveChangesAsync();
-
-            return Ok(new { score = totalScore, message = "Successfully submitted!" });
+            return StatusCode(500, new { message = "Error fetching contests", details = ex.Message });
         }
-        // 1. Get User History
-        [HttpGet("history")]
-        public async Task<IActionResult> GetMyHistory()
-        {
-            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (userIdClaim == null) return Unauthorized();
+    }
 
-            var userId = int.Parse(userIdClaim);
+    [HttpGet("leaderboard")]
+    public async Task<IActionResult> GetLeaderboard()
+    {
+        try {
+            var data = await _context.Submissions
+                .Include(s => s.User)
+                .Where(s => s.IsCompleted)
+                .GroupBy(s => s.User.Username)
+                .Select(g => new { Username = g.Key, TotalScore = g.Sum(x => x.Score) })
+                .OrderByDescending(x => x.TotalScore)
+                .ToListAsync();
+            return Ok(data);
+        }
+        catch (Exception ex) {
+            return StatusCode(500, new { message = "Error loading leaderboard", details = ex.Message });
+        }
+    }
 
+    [HttpGet("my-history")]
+    [Authorize]
+    public async Task<IActionResult> GetMyHistory()
+    {
+        try {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var history = await _context.Submissions
-                .Where(s => s.UserId == userId)
                 .Include(s => s.Contest)
-                .OrderByDescending(s => s.SubmittedAt)
+                .Where(s => s.UserId == userId)
                 .Select(s => new {
                     ContestName = s.Contest.Name,
-                    Score = s.Score,
+                    ScoreObtained = s.Score,
                     Date = s.SubmittedAt,
-                   
-                    PrizeWon = s.Score > 0 ? s.Contest.Prize : "No Prize"
+                    Prize = s.Score >= 50 ? s.Contest.Prize : "No Prize"
                 })
                 .ToListAsync();
-
             return Ok(history);
         }
-
-        // 2. Get Global Leaderboard
-        [HttpGet("leaderboard")]
-        public async Task<IActionResult> GetLeaderboard()
-        {
-            var leaderboard = await _context.Submissions
-                .GroupBy(s => s.UserId)
-                .Select(g => new {
-                    UserId = g.Key,
-                    TotalScore = g.Sum(s => s.Score),
-                    ContestsPlayed = g.Count()
-                })
-                .OrderByDescending(x => x.TotalScore)
-                .Take(10) // Top 10 users
-                .ToListAsync();
-
-            return Ok(leaderboard);
+        catch (Exception ex) {
+            return StatusCode(500, new { message = "Error fetching history", details = ex.Message });
         }
+    }
+
+    // --- NEW ADMIN RIGHTS SECTION ---
+
+    // Admin Proof: Get EVERY submission in the system (Normal users get 403 Forbidden)
+    [HttpGet("admin/all-submissions")]
+    [Authorize(Roles = "3")] 
+    public async Task<IActionResult> GetAllSubmissions()
+    {
+        try {
+            var allSubmissions = await _context.Submissions
+                .Include(s => s.User)
+                .Include(s => s.Contest)
+                .Select(s => new { s.User.Username, s.Contest.Name, s.Score, s.SubmittedAt })
+                .ToListAsync();
+            return Ok(allSubmissions);
+        }
+        catch (Exception ex) {
+            return StatusCode(500, new { message = "Admin access failed", details = ex.Message });
+        }
+    }
+
+    // Admin Proof: Ability to delete a contest
+    [HttpDelete("admin/delete-contest/{id}")]
+    [Authorize(Roles = "3")]
+    public async Task<IActionResult> DeleteContest(int id)
+    {
+        try {
+            var contest = await _context.Contests.FindAsync(id);
+            if (contest == null) return NotFound();
+            _context.Contests.Remove(contest);
+            await _context.SaveChangesAsync();
+            return Ok(new { message = "Contest deleted successfully by Admin." });
+        }
+        catch (Exception ex) {
+            return StatusCode(500, new { message = "Delete failed", details = ex.Message });
+        }
+    }
+
+    [HttpPost("submit")]
+    [Authorize]
+    public async Task<IActionResult> Submit([FromBody] SubmissionDto dto)
+    {
+        try {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+            if (await _context.Submissions.AnyAsync(s => s.UserId == userId && s.ContestId == dto.ContestId))
+                return BadRequest(new { message = "Already participated in this contest." });
+
+            var contest = await _context.Contests.Include(c => c.Questions).ThenInclude(q => q.Options)
+                .FirstOrDefaultAsync(c => c.Id == dto.ContestId);
+
+            if (contest == null) return NotFound("Contest not found.");
+
+            int score = 0;
+            foreach (var ans in dto.Answers)
+            {
+                var q = contest.Questions.FirstOrDefault(x => x.Id == ans.QuestionId);
+                if (q == null) continue;
+
+                var correctIds = q.Options.Where(o => o.IsCorrect).Select(o => o.Id).ToList();
+                if (correctIds.Count == ans.SelectedOptionIds.Count && !correctIds.Except(ans.SelectedOptionIds).Any())
+                    score += q.Points;
+            }
+
+            var submission = new Submission {
+                UserId = userId, ContestId = dto.ContestId, Score = score,
+                IsCompleted = true, SubmittedAt = DateTime.Now
+            };
+
+            _context.Submissions.Add(submission);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { score, prize = score >= 50 ? contest.Prize : "Participation Certificate" });
+        }
+        catch (Exception ex) {
+            return StatusCode(500, new { message = "Submission failed", details = ex.Message });
+        }
+    }
+    [HttpGet("{id}/questions")]
+    [Authorize]
+    public async Task<IActionResult> GetQuestions(int id)
+    {
+        var questions = await _context.Questions
+            .Include(q => q.Options)
+            .Where(q => q.ContestId == id)
+            .Select(q => new {
+                q.Id,
+                q.Text,
+                q.Points,
+                q.Type,
+                Options = q.Options.Select(o => new { o.Id, o.Text }) // Don't send 'IsCorrect' to frontend!
+            })
+            .ToListAsync();
+
+        return Ok(questions);
     }
 }

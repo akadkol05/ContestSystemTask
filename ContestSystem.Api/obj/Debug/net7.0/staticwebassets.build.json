@@ -1,11 +1,54 @@
 {
   "Version": 1,
-  "Hash": "2qPg52LtyBDD0V4lbsY97/SixbvOVKwOlhHDV2GPd5A=",
+  "Hash": "5VkFO0J7S8tICAgr8pc1yusEbkUO/J+Aj6cmGRHmrbA=",
   "Source": "ContestSystem.Api",
   "BasePath": "_content/ContestSystem.Api",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": []
+  "DiscoveryPatterns": [
+    {
+      "Name": "ContestSystem.Api\\wwwroot",
+      "Source": "ContestSystem.Api",
+      "ContentRoot": "C:\\Users\\akadk\\source\\repos\\ContestSystemTask\\ContestSystem.Api\\wwwroot\\",
+      "BasePath": "_content/ContestSystem.Api",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "C:\\Users\\akadk\\source\\repos\\ContestSystemTask\\ContestSystem.Api\\wwwroot\\index.html",
+      "SourceId": "ContestSystem.Api",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\akadk\\source\\repos\\ContestSystemTask\\ContestSystem.Api\\wwwroot\\",
+      "BasePath": "_content/ContestSystem.Api",
+      "RelativePath": "index.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\index.html"
+    },
+    {
+      "Identity": "C:\\Users\\akadk\\source\\repos\\ContestSystemTask\\ContestSystem.Api\\wwwroot\\script.js",
+      "SourceId": "ContestSystem.Api",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\akadk\\source\\repos\\ContestSystemTask\\ContestSystem.Api\\wwwroot\\",
+      "BasePath": "_content/ContestSystem.Api",
+      "RelativePath": "script.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\script.js"
+    }
+  ]
 }

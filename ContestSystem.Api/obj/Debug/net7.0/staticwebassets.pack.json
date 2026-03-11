@@ -1,0 +1,29 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\akadk\\source\\repos\\ContestSystemTask\\ContestSystem.Api\\wwwroot\\index.html",
+      "PackagePath": "staticwebassets\\index.html"
+    },
+    {
+      "Id": "C:\\Users\\akadk\\source\\repos\\ContestSystemTask\\ContestSystem.Api\\wwwroot\\script.js",
+      "PackagePath": "staticwebassets\\script.js"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.ContestSystem.Api.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.build.ContestSystem.Api.props",
+      "PackagePath": "build\\ContestSystem.Api.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.buildMultiTargeting.ContestSystem.Api.props",
+      "PackagePath": "buildMultiTargeting\\ContestSystem.Api.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.buildTransitive.ContestSystem.Api.props",
+      "PackagePath": "buildTransitive\\ContestSystem.Api.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

@@ -1,85 +1,100 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ContestSystem.Api.Data;
-using ContestSystem.Api.Models;
-using ContestSystem.Api.DTOs;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.VisualStudio.Services.UserAccountMapping;
+using Microsoft.AspNetCore.Authorization;
+using ContestSystem.Api.Models;
 
-namespace ContestSystem.Api.Controllers
+[Route("api/[controller]")]
+[ApiController]
+public class AuthController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class AuthController : ControllerBase
+    private readonly AppDbContext _context;
+    private readonly IConfiguration _config;
+
+    public AuthController(AppDbContext context, IConfiguration config)
     {
-        private readonly AppDbContext _context;
-        private readonly IConfiguration _configuration;
-
-        public AuthController(AppDbContext context, IConfiguration configuration)
+        _context = context;
+        _config = config;
+    }
+    [HttpPost("register")]
+    public async Task<IActionResult> Register([FromBody] RegisterDto register)
+    {
+        try
         {
-            _context = context;
-            _configuration = configuration;
-        }
+            // 1. Check if user already exists
+            if (await _context.Users.AnyAsync(u => u.Username == register.Username))
+            {
+                return BadRequest(new { message = "Username is already taken." });
+            }
 
-        [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterDto request)
-        {
-            if (await _context.Users.AnyAsync(u => u.Email == request.Email))
-                return BadRequest("User already exists.");
-
+            // 2. Create new user with hashed password
             var user = new User
             {
-                Username = request.Username,
-                Email = request.Email,
-                // Use the full path to avoid the "Context" error
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
-                Role = Enum.Parse<UserRole>(request.Role)
+                Username = register.Username,
+                Email = register.Email,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(register.Password),
+                Role = string.IsNullOrEmpty(register.Role) ? "1" : register.Role // Default to Normal
             };
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
+
             return Ok(new { message = "User registered successfully!" });
         }
-
-        [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginDto request)
+        catch (Exception ex)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+            return StatusCode(500, new { message = "Registration failed.", details = ex.Message });
+        }
+    }
 
-            // Fixes the "Possible null reference" warning by checking user first
-            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginDto login)
+    {
+        try
+        {
+            // Master Admin Check from AppSettings
+            var adminSettings = _config.GetSection("AdminUser");
+            if (login.Username == adminSettings["Username"] && login.Password == adminSettings["Password"])
             {
-                return BadRequest("Invalid email or password.");
+                var token = GenerateJWT(login.Username, "3", "1"); // Role 3 = Admin
+                return Ok(new { Token = token, Role = "Admin" });
             }
 
-            var token = CreateToken(user);
-            return Ok(new { token = token });
-        }
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == login.Username);
+            if (user == null || !BCrypt.Net.BCrypt.Verify(login.Password, user.PasswordHash))
+                return Unauthorized(new { message = "Invalid credentials" });
 
-        private string CreateToken(User user)
+            return Ok(new { Token = GenerateJWT(user.Username, user.Role, user.Id.ToString()), Role = user.Role });
+        }
+        catch (Exception ex)
         {
-
-            var claims = new List<Claim>
-{
-    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-    new Claim(ClaimTypes.Name, user.Username),
-    new Claim(ClaimTypes.Role, user.Role.ToString())
-};
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(
-                issuer: _configuration["Jwt:Issuer"],
-                audience: _configuration["Jwt:Audience"],
-                claims: claims,
-                expires: DateTime.Now.AddDays(1),
-                signingCredentials: creds
-            );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return StatusCode(500, new { message = "Internal error", details = ex.Message });
         }
+    }
+
+    [HttpPost("logout")]
+    [Authorize]
+    public IActionResult Logout()
+    {
+        // As discussed, frontend deletes token. Server returns success.
+        return Ok(new { message = "Logged out successfully. Token invalidated on client side." });
+    }
+
+    private string GenerateJWT(string user, string role, string id)
+    {
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
+        var claims = new[] {
+            new Claim(ClaimTypes.Name, user),
+            new Claim(ClaimTypes.Role, role),
+            new Claim(ClaimTypes.NameIdentifier, id)
+        };
+        var token = new JwtSecurityToken(_config["Jwt:Issuer"], _config["Jwt:Audience"], claims,
+            expires: DateTime.Now.AddHours(2), signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256));
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }
