@@ -14,7 +14,7 @@ ContestSystemTask/
 ├── ContestSystem.Api/              # Backend Project (ASP.NET Core 7.0)
 │   ├── Controllers/                # API Endpoints (Auth, Contests, Submissions)
 │   ├── Data/                       # ApplicationDbContext & DB Configurations
-│   ├── Migrations/                 # EF Core Schema & Seed History
+│   ├── Migrations/                 # EF Core Schema & Seed History (Code-First)
 │   ├── Middleware/                 # Custom Rate Limiting & Error Handling logic
 │   ├── Models/                     # Database Entities & DTOs
 │   └── appsettings.json            # Connection Strings & JWT Settings
@@ -26,24 +26,32 @@ ContestSystemTask/
 │
 ├── ContestAPI.txt                  # Postman Collection (Rename to .json)
 └── README.md                       # Documentation & Screenshots
+
+
 📸 Functionality Showcase
 A. Secure Login & Dashboard
-Authenticated entry point. The system uses JWT tokens to manage sessions and identify user roles.
+<img width="1806" height="960" alt="image" src="https://github.com/user-attachments/assets/3e67c3d9-d016-47c3-b998-687d60cd890c" />
 
 B. Admin Management (Role-Based Access)
-When logged in as SuperAdmin, the red Database Management panel is dynamically unlocked, allowing for contest deletion.
+Logged in as SuperAdmin, the red Database Management panel is unlocked.
+<img width="1715" height="915" alt="image" src="https://github.com/user-attachments/assets/6b9da35e-b945-4104-9553-4d58dfeac349" />
+<img width="1770" height="977" alt="image" src="https://github.com/user-attachments/assets/d5bd2ae7-b0a3-42dc-b1f8-17a6cf21273d" />
+
 
 C. API Protection (Rate Limiting)
-Custom middleware blocks excessive requests (Limit: 3 hits per 30 seconds) to ensure API stability and prevent brute-force attacks.
+The API blocks excessive requests (3 hits/30s) to ensure stability.
+<img width="1737" height="955" alt="image" src="https://github.com/user-attachments/assets/f2efce5f-98d4-42c7-90bf-a0c6cbb1189e" />
 
-D. Normal User Experience
-Standard users are restricted from administrative views and can only participate in eligible contests.
+D.Normal User showing only normal contests
+<img width="1828" height="692" alt="image" src="https://github.com/user-attachments/assets/96a9853d-b9e3-4ff5-8938-d7cd312b4d78" />
+
 
 🏃 Instructions to Run Locally
-1. Database Setup (Migrations)
-The project uses Entity Framework Core Migrations to handle schema creation and seeding.
+1. Database Setup
+Update DefaultConnection in appsettings.json to your local SQL Server instance.
 
-Using Visual Studio:
+
+Method 1: Visual Studio (GUI)
 
 Update DefaultConnection in appsettings.json to your local SQL Server instance.
 
@@ -51,9 +59,9 @@ Open Package Manager Console.
 
 Run: Update-Database
 
-Using Command Line (dotnet CLI):
+Method 2: Command Line (dotnet CLI)
 
-Navigate to the ContestSystem.Api folder.
+Navigate to the ContestSystem.Api folder in your terminal.
 
 Run:
 
@@ -65,22 +73,20 @@ Open ContestSystem.sln and set ContestSystem.Api as the startup project.
 Press F5. The API defaults to https://localhost:44344.
 
 ⚠️ Important: Localhost Port Troubleshooting
-If your environment runs the project on a different port:
+If your local environment runs the project on a different port (e.g., 5000 or 7200):
 
 Open script.js in the wwwroot folder.
 
-Change the first line: const API = "https://localhost:XXXX/api"; (Replace XXXX with your port).
+Change the first line: const API = "https://localhost:XXXX/api"; (Replace XXXX with your specific port).
 
 Refresh the browser.
 
 🛠️ Technical Highlights
-JWT Auth: Secure authentication with role-based claims.
+Global Error Handling: Custom middleware catches all server exceptions to return clean, standardized JSON errors.
 
-Global Error Handling: Custom middleware to return standardized JSON error responses.
+Security: JWT-based Auth + Custom Rate Limiting middleware.
 
-Code-First Migrations: Fully versioned database schema.
-
-Security: Implemented Rate Limiting on critical endpoints.
+Clean Code: Separation of Concerns (Controllers -> Services -> Data).
 
 🔑 Test Credentials
 Admin: SuperAdmin / SecretPassword123!
@@ -88,4 +94,4 @@ Admin: SuperAdmin / SecretPassword123!
 User: NormalUser1 / UserPass123!
 
 🧪 Postman Documentation
-Import ContestAPI.txt (rename to .json) into Postman. It includes pre-configured headers for JWT authentication and tests for the rate-limiting middleware.
+Import ContestAPI.txt (rename to .json) into Postman. It contains pre-configured headers for JWT authentication and pre-written tests for the rate-limiting logic.
