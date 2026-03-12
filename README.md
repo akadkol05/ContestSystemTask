@@ -1,72 +1,126 @@
-🏆 ContestMaster Pro - Technical Submission
-A robust, full-stack Contest Management System designed with a focus on Security, Scalability, and User Experience. Built using ASP.NET Core 7.0 and Vanilla JavaScript.
 
-🚀 Live Demo & Source
-Live Preview: https://luxury-unicorn-63ffef.netlify.app/
+# 🏆 ContestMaster Pro - Technical Submission
 
-Source Code: https://github.com/akadkol05/ContestSystemTask
+> **Note:** All source code and project files are located in the **main** branch.
 
-🛠️ Technical Stack & Features
-1. Backend Architecture (ASP.NET Core 7.0)
-Clean Architecture: Separation of concerns between Controllers, Services, and Data layers.
+A robust, full-stack Contest Management System built using **ASP.NET Core 7.0** and **Vanilla JavaScript**.
 
-JWT Authentication: Secure, token-based login system with role claims.
+---
 
-Global Error Handling: Middleware catches server errors and returns clean JSON responses.
+## 🚀 Live Demo & Source
+* **Live Preview:** [https://luxury-unicorn-63ffef.netlify.app/](https://luxury-unicorn-63ffef.netlify.app/)
+* **Source Code:** [https://github.com/akadkol05/ContestSystemTask](https://github.com/akadkol05/ContestSystemTask)
 
-Custom Rate Limiting: Middleware to prevent API abuse (Limit: 3 requests per 30 seconds).
+---
 
-2. Frontend Logic (Vanilla JS & Bootstrap)
-Role-Based UI: Interface dynamically renders based on the user's role (Admin vs. User).
+## 📁 Project Structure
 
-State Management: Securely handles JWT storage and session persistence.
+```text
+ContestMasterPro/
+├── ContestSystem.sln               # Root Solution File
+│
+├── ContestSystem.Api/              # Backend Project
+│   ├── Controllers/                # API Endpoints
+│   ├── Data/                       # DbContext & Configurations
+│   ├── Migrations/                 # EF Core Schema & Seed History
+│   ├── Middleware/                 # Rate Limiting & Error Handling
+│   └── Models/                     # Database Entities & DTOs
+│
+├── wwwroot/                        # Frontend Application
+│   ├── index.html                  # Main UI Entry Point
+│   ├── script.js                   # API Integration
+│   └── style.css                   # Custom UI Styling
+│
+├── ContestAPI.json                 # Postman Collection
+└── README.md                       # Documentation
 
-Asynchronous Operations: Clean fetch calls with try/catch error handling.
+```
 
-📸 Functionality Showcase
-A. Secure Login & Dashboard
-<img width="1806" height="960" alt="image" src="https://github.com/user-attachments/assets/3e67c3d9-d016-47c3-b998-687d60cd890c" />
+---
 
-B. Admin Management (Role-Based Access)
-Logged in as SuperAdmin, the red Database Management panel is unlocked.
-<img width="1715" height="915" alt="image" src="https://github.com/user-attachments/assets/6b9da35e-b945-4104-9553-4d58dfeac349" />
-<img width="1770" height="977" alt="image" src="https://github.com/user-attachments/assets/d5bd2ae7-b0a3-42dc-b1f8-17a6cf21273d" />
+## 📸 Functionality Showcase
+
+### A. Secure Login & Dashboard
+
+Authenticated entry point using JWT. The UI dynamically adapts based on the user's role (Admin vs. User).
+
+---
+
+### B. Admin Management (Role-Based Access)
+
+When logged in as **SuperAdmin**, the restricted **Admin Database Management** panel is visible, allowing for full control over contest data.
+
+---
+
+### C. Confirmation Safety Dialog
+
+To prevent data loss, the system includes a custom modal confirmation before any contest is permanently deleted.
+
+---
+
+### D. API Protection (Rate Limiting)
+
+Security middleware prevents brute-force attacks by limiting users to **3 requests per 30 seconds**.
+
+---
+
+### E. Normal User Experience
+
+Standard users are restricted to a simplified view where they can only participate in active contests.
+
+---
+
+## 🧪 API Endpoints (Postman Documentation)
+
+| Category | Endpoint | Method | Auth Required | Description |
+| --- | --- | --- | --- | --- |
+| **Auth** | `/api/auth/login` | `POST` | Public | Get JWT Token & User Role |
+| **Auth** | `/api/auth/register` | `POST` | Public | Create new account |
+| **Data** | `/api/contest` | `GET` | Public | Fetch available contests |
+| **User** | `/api/contest/submit` | `POST` | **Bearer JWT** | Submit quiz answers |
+| **Admin** | `/api/contest/admin/all-submissions` | `GET` | **Admin Only** | View every user's entry |
+| **Admin** | `/api/contest/admin/delete-contest/{id}` | `DELETE` | **Admin Only** | Remove a contest |
+
+---
+
+## 🏃 Instructions to Run Locally
+
+### 1. Database Setup (Migrations)
+
+Run these commands to generate the local database:
+
+**Method 1: Visual Studio (Package Manager Console)**
+
+```powershell
+Update-Database
+
+```
+
+**Method 2: Command Line (dotnet CLI)**
+
+```bash
+cd ContestSystem.Api
+dotnet ef database update
+
+```
+
+---
+
+### 2. Launching the Project
+
+1. Open `ContestSystem.sln`.
+2. Set `ContestSystem.Api` as startup project.
+3. Press **F5**. (Default Port: `44344`).
+
+---
+
+## 🔑 Test Credentials
+
+* **Admin:** `SuperAdmin` / `SecretPassword123!`
+* **User:** `NormalUser1` / `UserPass123!`
+
+```
 
 
-C. API Protection (Rate Limiting)
-The API blocks excessive requests (3 hits/30s) to ensure stability.
-<img width="1737" height="955" alt="image" src="https://github.com/user-attachments/assets/f2efce5f-98d4-42c7-90bf-a0c6cbb1189e" />
 
-D.Normal User showing only normal contests
-<img width="1828" height="692" alt="image" src="https://github.com/user-attachments/assets/96a9853d-b9e3-4ff5-8938-d7cd312b4d78" />
-
-
-🏃 Instructions to Run Locally
-1. Database Setup
-Update DefaultConnection in appsettings.json to your local SQL Server instance.
-
-In Package Manager Console, run: Update-Database.
-
-(Optional) Use the Database_Setup.sql file in the root to manually execute schema and seed data.
-
-2. Launching the Project
-Open ContestSystem.sln and set ContestSystem.Api as the startup project.
-
-Press F5. The API defaults to https://localhost:44344.
-
-⚠️ Important: Localhost Port Troubleshooting
-If your Visual Studio runs the project on a different port (e.g., 5000 or 7200):
-
-Open script.js in the root folder.
-
-Change the first line: const API = "https://localhost:XXXX/api"; (Replace XXXX with your port).
-
-Refresh the browser.
-
-🔑 Test Credentials
-Admin: SuperAdmin / SecretPassword123!
-
-User: NormalUser1 / UserPass123!
-
-🧪 Postman Documentation
-Import ContestAPI.txt (rename to .json) into Postman. It includes pre-configured headers for JWT authentication and tests for the rate-limiting middleware.
+```
