@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\akadk\\source\\repos\\ContestSystemTask\\ContestSystem.Api\\ContestSystem.Api.csproj": {}
+    "C:\\Users\\akadk\\Source\\Repos\\ContestSystemTask\\ContestSystem.Api\\ContestSystem.Api.csproj": {}
   },
   "projects": {
-    "C:\\Users\\akadk\\source\\repos\\ContestSystemTask\\ContestSystem.Api\\ContestSystem.Api.csproj": {
+    "C:\\Users\\akadk\\Source\\Repos\\ContestSystemTask\\ContestSystem.Api\\ContestSystem.Api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\akadk\\source\\repos\\ContestSystemTask\\ContestSystem.Api\\ContestSystem.Api.csproj",
+        "projectUniqueName": "C:\\Users\\akadk\\Source\\Repos\\ContestSystemTask\\ContestSystem.Api\\ContestSystem.Api.csproj",
         "projectName": "ContestSystem.Api",
-        "projectPath": "C:\\Users\\akadk\\source\\repos\\ContestSystemTask\\ContestSystem.Api\\ContestSystem.Api.csproj",
+        "projectPath": "C:\\Users\\akadk\\Source\\Repos\\ContestSystemTask\\ContestSystem.Api\\ContestSystem.Api.csproj",
         "packagesPath": "C:\\Users\\akadk\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\akadk\\source\\repos\\ContestSystemTask\\ContestSystem.Api\\obj\\",
+        "outputPath": "C:\\Users\\akadk\\Source\\Repos\\ContestSystemTask\\ContestSystem.Api\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

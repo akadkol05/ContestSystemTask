@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "YFKsJMXzXBBQdOpi3TSOUYnNrYYabFcN/PNHy202YohBZJkAbfnGBQ6SzqAIow2/01cWFUrIM/rR8WjZI3OHHQ==",
+  "dgSpecHash": "uVieVZg0PDGLKytDzp52LnBk9mxzg/ZWmzK2a8byYKLaZPPfUJ47u/xpCJ5uqDjm2zmIkiz+xgWtG5nIz9SMng==",
   "success": true,
-  "projectFilePath": "C:\\Users\\akadk\\source\\repos\\ContestSystemTask\\ContestSystem.Api\\ContestSystem.Api.csproj",
+  "projectFilePath": "C:\\Users\\akadk\\Source\\Repos\\ContestSystemTask\\ContestSystem.Api\\ContestSystem.Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\akadk\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\akadk\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

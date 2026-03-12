@@ -23,7 +23,7 @@ async function handleAuth(mode) {
     if (data) {
         if (mode === 'login') {
             localStorage.setItem('token', data.token);
-            localStorage.setItem('role', String(data.role));
+            localStorage.setItem('role', String(data.role)); 
             localStorage.setItem('user', body.username);
             location.reload();
         } else { alert("Registered!"); toggleAuth(false); }
@@ -31,42 +31,84 @@ async function handleAuth(mode) {
 }
 
 async function loadContests() {
-    const contests = await api('/Contest');
-    const role = localStorage.getItem('role');
-    const token = localStorage.getItem('token');
+    try {
+        const contests = await api('/Contest');
+        const role = localStorage.getItem('role');
+        const token = localStorage.getItem('token');
 
-    // 1. Fetch participation history to see what's already done
-    let history = [];
-    if (token) {
-        history = await api('/Contest/my-history') || [];
-    }
-    const participatedNames = history.map(h => h.contestName);
+        if (!contests) throw new Error("Could not fetch contests");
 
-    if (!contests) return;
+        // --- Admin Management Section ---
+        const adminPanel = id('admin-rights-section');
+        const adminList = id('admin-contest-list');
 
-    id('contest-grid').innerHTML = contests.map(c => {
-        // 2. Admin Check: Match the Role "3" from your C# Authorize attribute
-        const isAdmin = (role === "3");
-        const isDone = participatedNames.includes(c.name);
-
-        return `
-        <div class="col-md-4">
-            <div class="card p-3 h-100 ${isAdmin ? 'admin-only' : ''}">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h6 class="fw-bold m-0">${c.name}</h6>
-                    ${isAdmin ? `<i class="fas fa-trash-alt delete-btn" onclick="deleteContest(${c.id})"></i>` : ''}
-                </div>
-                <p class="small text-muted mb-3">${c.accessLevel} | ${c.description || 'Join now'}</p>
-                
-                ${!token
-                ? `<button disabled class="btn btn-sm btn-outline-secondary w-100">Login to Join</button>`
-                : isDone
-                    ? `<button class="btn btn-sm btn-secondary w-100" disabled><i class="fas fa-check me-1"></i> Already Submitted</button>`
-                    : `<button onclick="enterContest(${c.id}, '${c.name}')" class="btn btn-sm btn-indigo w-100">Enter Contest</button>`
+        if (role === "Admin") {
+            adminPanel?.classList.remove('hidden');
+            if (adminList) {
+                adminList.innerHTML = contests.map(c => `
+                    <tr>
+                        <td><span class="badge badge-admin">#${c.id}</span></td>
+                        <td><span class="fw-bold">${c.name}</span></td>
+                        <td><span class="badge bg-light text-dark border">${c.accessLevel.toUpperCase()}</span></td>
+                        <td class="text-end">
+                            <button onclick="deleteContest(${c.id})" class="btn btn-sm btn-outline-danger">
+                                <i class="fas fa-trash-alt me-1"></i> Delete Contest
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
             }
-            </div>
-        </div>`;
-    }).join('');
+        }
+
+        // --- Main Grid Logic ---
+        let history = [];
+        if (token) {
+            history = await api('/Contest/my-history') || [];
+        }
+        const participatedNames = history.map(h => h.contestName);
+
+        id('contest-grid').innerHTML = contests.map(c => {
+            const isAdmin = (role === "Admin");
+            const isDone = participatedNames.includes(c.name);
+
+            return `
+            <div class="col-md-4">
+                <div class="card p-3 h-100 ${isAdmin ? 'admin-only' : ''}">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="fw-bold m-0 text-dark">${c.name}</h6>
+                        ${isAdmin ? `<i class="fas fa-trash-alt text-danger cursor-pointer" onclick="deleteContest(${c.id})"></i>` : ''}
+                    </div>
+                    <p class="small text-muted mb-3">${c.accessLevel} | ${c.description || 'Professional Exam'}</p>
+                    ${!token
+                    ? `<button disabled class="btn btn-sm btn-outline-secondary w-100">Login to Join</button>`
+                    : isDone
+                        ? `<button class="btn btn-sm btn-secondary w-100" disabled><i class="fas fa-check me-1"></i> Submitted</button>`
+                        : `<button onclick="enterContest(${c.id}, '${c.name}')" class="btn btn-sm btn-indigo w-100">Enter Contest</button>`
+                }
+                </div>
+            </div>`;
+        }).join('');
+
+    } catch (err) {
+        console.error("UI Update Error:", err);
+        // Optional: show a small toast or alert to the user
+    }
+}
+
+async function deleteContest(id) {
+    if (!confirm(`Are you sure you want to delete Contest #${id}?`)) return;
+
+    try {
+        const result = await api(`/Contest/admin/delete-contest/${id}`, 'DELETE');
+        if (result) {
+            alert("Contest deleted successfully from database.");
+            location.reload();
+        } else {
+            alert("Delete failed. You may not have server-side Admin permissions.");
+        }
+    } catch (err) {
+        alert("A system error occurred. Check if the server is running.");
+    }
 }
 async function enterContest(contestId, name) {
     currentContestId = contestId;
@@ -104,13 +146,6 @@ async function submitAnswers() {
     const result = await api('/Contest/submit', 'POST', { contestId: currentContestId, answers });
     if (result) {
         alert(`Submitted! Score: ${result.score}`);
-        location.reload();
-    }
-}
-
-async function deleteContest(id) {
-    if (confirm("Admin: Delete this contest?")) {
-        await api(`/Contest/admin/delete-contest/${id}`, 'DELETE');
         location.reload();
     }
 }

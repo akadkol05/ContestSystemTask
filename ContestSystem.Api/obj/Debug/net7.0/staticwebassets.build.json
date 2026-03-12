@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "5VkFO0J7S8tICAgr8pc1yusEbkUO/J+Aj6cmGRHmrbA=",
+  "Hash": "FGgxpQo/JArNpCgRY0GNqznsdKqz71ToZUWwNLCDTQg=",
   "Source": "ContestSystem.Api",
   "BasePath": "_content/ContestSystem.Api",
   "Mode": "Default",
@@ -10,17 +10,17 @@
     {
       "Name": "ContestSystem.Api\\wwwroot",
       "Source": "ContestSystem.Api",
-      "ContentRoot": "C:\\Users\\akadk\\source\\repos\\ContestSystemTask\\ContestSystem.Api\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\akadk\\Source\\Repos\\ContestSystemTask\\ContestSystem.Api\\wwwroot\\",
       "BasePath": "_content/ContestSystem.Api",
       "Pattern": "**"
     }
   ],
   "Assets": [
     {
-      "Identity": "C:\\Users\\akadk\\source\\repos\\ContestSystemTask\\ContestSystem.Api\\wwwroot\\index.html",
+      "Identity": "C:\\Users\\akadk\\Source\\Repos\\ContestSystemTask\\ContestSystem.Api\\wwwroot\\index.html",
       "SourceId": "ContestSystem.Api",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\akadk\\source\\repos\\ContestSystemTask\\ContestSystem.Api\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\akadk\\Source\\Repos\\ContestSystemTask\\ContestSystem.Api\\wwwroot\\",
       "BasePath": "_content/ContestSystem.Api",
       "RelativePath": "index.html",
       "AssetKind": "All",
@@ -34,10 +34,10 @@
       "OriginalItemSpec": "wwwroot\\index.html"
     },
     {
-      "Identity": "C:\\Users\\akadk\\source\\repos\\ContestSystemTask\\ContestSystem.Api\\wwwroot\\script.js",
+      "Identity": "C:\\Users\\akadk\\Source\\Repos\\ContestSystemTask\\ContestSystem.Api\\wwwroot\\script.js",
       "SourceId": "ContestSystem.Api",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\akadk\\source\\repos\\ContestSystemTask\\ContestSystem.Api\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\akadk\\Source\\Repos\\ContestSystemTask\\ContestSystem.Api\\wwwroot\\",
       "BasePath": "_content/ContestSystem.Api",
       "RelativePath": "script.js",
       "AssetKind": "All",
