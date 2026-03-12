@@ -1,99 +1,62 @@
-Contest Participation System API
-A professional, role-based RESTful API built with ASP.NET Core 7.0 and Entity Framework Core. This system manages contest lifecycles, real-time scoring logic, and user leaderboards with tiered access for Guests, Normal Users, and VIPs.
+🏆 ContestMaster Pro - Technical Submission
+A robust, full-stack Contest Management System designed with a focus on Security, Scalability, and User Experience. Built using ASP.NET Core 7.0 and Vanilla JavaScript.
 
-Key Features
-1. Advanced Authentication & Authorization
-JWT Bearer Tokens: Secure identity management and session handling.
+🚀 Live Demo & Source
+Live Preview: https://luxury-unicorn-63ffef.netlify.app/
 
-Role-Based Access Control (RBAC):
+Source Code: https://github.com/akadkol05/ContestSystemTask
 
-Guest: Can view public contest metadata.
+🛠️ Technical Stack & Features
+1. Backend Architecture (ASP.NET Core 7.0)
+Clean Architecture: Separation of concerns between Controllers, Services, and Data layers.
 
-Normal User: Can participate in "Normal" contests.
+JWT Authentication: Secure, token-based login system with role claims.
 
-VIP User: Full access to high-stakes "VIP" contests and exclusive prizes.
+Global Error Handling: Middleware catches server errors and returns clean JSON responses.
 
-2. Contest & Question Engine
-Flexible Question Types: Logic built for Single-select, Multi-select, and True/False questions.
+Custom Rate Limiting: Middleware to prevent API abuse (Limit: 3 requests per 30 seconds).
 
-Automatic Scoring: Real-time calculation upon submission by comparing user answers against database records.
+2. Frontend Logic (Vanilla JS & Bootstrap)
+Role-Based UI: Interface dynamically renders based on the user's role (Admin vs. User).
 
-Optimized Queries: Uses Eager Loading (.Include()) to fetch questions and options in a single database round-trip.
+State Management: Securely handles JWT storage and session persistence.
 
-3. Leaderboard & User History
-Global Ranking: A dynamic leaderboard calculated via LINQ grouping and aggregation.
+Asynchronous Operations: Clean fetch calls with try/catch error handling.
 
-User Dashboard: Participants can track their history of joined contests, scores, and prizes won.
+📸 Functionality Showcase
+A. Secure Login & Dashboard
+B. Admin Management (Role-Based Access)
+Logged in as SuperAdmin, the red Database Management panel is unlocked.
 
-4. Enterprise-Grade Stability
-Rate Limiting: Implemented Fixed-Window Limiting (10 requests / 10 seconds) to prevent API abuse.
+C. API Protection (Rate Limiting)
+The API blocks excessive requests (3 hits/30s) to ensure stability.
 
-Global Error Handling: Clean, structured JSON responses for edge cases (401, 403, 400).
-
-Code-First Migrations: Fully versioned database schema management.
-
-Technical Stack
-Framework: .NET 7.0 Web API
-
-ORM: Entity Framework Core
-
-Database: Microsoft SQL Server (SQLEXPRESS / LocalDB)
-
-Security: JWT (System.IdentityModel.Tokens.Jwt), BCrypt.Net (Password Hashing)
-
-Documentation: Swagger / OpenAPI
-
-Getting Started
+🏃 Instructions to Run Locally
 1. Database Setup
-Update the connection string in appsettings.json to point to your local SQL instance:
+Update DefaultConnection in appsettings.json to your local SQL Server instance.
 
-JSON
-"ConnectionStrings": {
-  "DefaultConnection": "Server=YOUR_SERVER_NAME;Database=ContestSystem;Trusted_Connection=True;TrustServerCertificate=True;"
-}
-Apply the migrations to create the schema:
+In Package Manager Console, run: Update-Database.
 
-PowerShell
-dotnet tool run dotnet-ef database update
-2. Running the Application
-Via Visual Studio (IIS Express)
-Open ContestSystem.sln in Visual Studio 2022.
+(Optional) Use the Database_Setup.sql file in the root to manually execute schema and seed data.
 
-Ensure IIS Express (the green play button) is selected in the toolbar.
+2. Launching the Project
+Open ContestSystem.sln and set ContestSystem.Api as the startup project.
 
-Press F5. The browser will launch the Swagger UI at /swagger/index.html.
+Press F5. The API defaults to https://localhost:44344.
 
-Via .NET CLI
-PowerShell
-dotnet run
-3. Data Seeding
-The system includes an automatic DbSeeder that populates the database on the first run with:
+⚠️ Important: Localhost Port Troubleshooting
+If your Visual Studio runs the project on a different port (e.g., 5000 or 7200):
 
-Normal Contest: "General Knowledge Quiz"
+Open script.js in the root folder.
 
-VIP Contest: "Crypto Masters VIP"
+Change the first line: const API = "https://localhost:XXXX/api"; (Replace XXXX with your port).
 
-Pre-configured questions, options, and correct answers.
+Refresh the browser.
 
-Testing with Postman
-The Postman Collection is included in the root of this repository as:
-ContestSystem.postman_collection.json.
+🔑 Test Credentials
+Admin: SuperAdmin / SecretPassword123!
 
-Testing Workflow:
+User: NormalUser1 / UserPass123!
 
-Import: Drag the .json file into Postman.
-
-Register: Create a user (Role: Normal or VIP).
-
-Login: Copy the token from the response.
-
-Authorize: In other requests, go to the Auth tab, select Bearer Token, and paste your token.
-
- Project Structure
-/Controllers: API endpoints for Authentication, Contest retrieval, and Submissions.
-
-/Models: Database entities (User, Contest, Question, Option, Submission).
-
-/Data: AppDbContext, Migrations, and DbSeeder.
-
-/DTOs: Data Transfer Objects for decoupled request/response handling.
+🧪 Postman Documentation
+Import ContestAPI.txt (rename to .json) into Postman. It includes pre-configured headers for JWT authentication and tests for the rate-limiting middleware.
