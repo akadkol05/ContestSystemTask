@@ -59,8 +59,7 @@ Standard users are restricted to a simplified view where they can only participa
 | **Data** | `/api/contest` | `GET` | Public | Fetch available contests |
 | **User** | `/api/contest/submit` | `POST` | **Bearer JWT** | Submit quiz answers |
 | **Admin** | `/api/contest/admin/all-submissions` | `GET` | **Admin Only** | View every user's entry |
-| **Admin** | `/api/contest/admin/delete-contest/{id}` | `DELETE` | **Admin Only** | Remove a contest |	
-					
+| **Admin** | `/api/contest/admin/delete-contest/{id}` | `DELETE` | **Admin Only** | Remove a contest |
 					
 🏃 Instructions to Run Locally
 1. Database Setup (Migrations)
