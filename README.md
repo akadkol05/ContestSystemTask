@@ -76,7 +76,7 @@ Standard users are restricted to a simplified view where they can only participa
 | --- | --- | --- | --- | --- |
 | **Auth** | `/api/auth/login` | `POST` | Public | Get JWT Token & User Role |
 | **Auth** | `/api/auth/register` | `POST` | Public | Create new account |
-| **Data** | `/api/contest` | `GET` | Public | Fetch available contests |
+| **Data** | `/api/contest` | `GET` | Public | Fetch available contests as per role |
 | **User** | `/api/contest/submit` | `POST` | **Bearer JWT** | Submit quiz answers |
 | **Admin** | `/api/contest/admin/all-submissions` | `GET` | **Admin Only** | View every user's entry |
 | **Admin** | `/api/contest/admin/delete-contest/{id}` | `DELETE` | **Admin Only** | Remove a contest |
