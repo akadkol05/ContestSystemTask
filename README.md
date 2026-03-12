@@ -50,14 +50,16 @@ Security middleware prevents brute-force attacks by limiting users to 3 requests
 E. Normal User Experience
 Standard users are restricted to a simplified view where they can only participate in active contests.
 
-🧪 API Endpoints (Postman Collection)
-Category	Endpoint	Method	Auth Required	Description	
-Auth	/api/auth/login	POST	Public	Get JWT Token & User Role	
-Auth	/api/auth/register	POST	Public	Create new account	
-Data	/api/contest	GET	Public	Fetch available contests	
-User	/api/contest/submit	POST	Bearer JWT	Submit quiz answers	
-Admin	/api/contest/admin/all-submissions	GET	Admin Only	View every user's entry	
-Admin	/api/contest/admin/delete-contest/{id}	DELETE	Admin Only	Remove a contest	
+## 🧪 API Endpoints (Postman Documentation)
+
+| Category | Endpoint | Method | Auth Required | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| **Auth** | `/api/auth/login` | `POST` | Public | Get JWT Token & User Role |
+| **Auth** | `/api/auth/register` | `POST` | Public | Create new account |
+| **Data** | `/api/contest` | `GET` | Public | Fetch available contests |
+| **User** | `/api/contest/submit` | `POST` | **Bearer JWT** | Submit quiz answers |
+| **Admin** | `/api/contest/admin/all-submissions` | `GET` | **Admin Only** | View every user's entry |
+| **Admin** | `/api/contest/admin/delete-contest/{id}` | `DELETE` | **Admin Only** | Remove a contest |	
 					
 					
 🏃 Instructions to Run Locally
