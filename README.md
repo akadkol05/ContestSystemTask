@@ -1,5 +1,5 @@
 
-# 🏆 ContestMaster Pro - Technical Submission
+# 🏆 ContestMaster Pro 
 
 > **Note:** All source code and project files are located in the **main** branch.
 
