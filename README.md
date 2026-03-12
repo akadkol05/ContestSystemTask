@@ -6,63 +6,81 @@ Live Preview: https://luxury-unicorn-63ffef.netlify.app/
 
 Source Code: https://github.com/akadkol05/ContestSystemTask
 
-🛠️ Technical Stack & Features
-1. Backend Architecture (ASP.NET Core 7.0)
-Clean Architecture: Separation of concerns between Controllers, Services, and Data layers.
-
-JWT Authentication: Secure, token-based login system with role claims.
-
-Global Error Handling: Middleware catches server errors and returns clean JSON responses.
-
-Custom Rate Limiting: Middleware to prevent API abuse (Limit: 3 requests per 30 seconds).
-
-2. Frontend Logic (Vanilla JS & Bootstrap)
-Role-Based UI: Interface dynamically renders based on the user's role (Admin vs. User).
-
-State Management: Securely handles JWT storage and session persistence.
-
-Asynchronous Operations: Clean fetch calls with try/catch error handling.
-
+📁 Project Structure
+Plaintext
+ContestSystemTask/
+├── ContestSystem.sln               # Root Solution File
+│
+├── ContestSystem.Api/              # Backend Project (ASP.NET Core 7.0)
+│   ├── Controllers/                # API Endpoints (Auth, Contests, Submissions)
+│   ├── Data/                       # ApplicationDbContext & DB Configurations
+│   ├── Migrations/                 # EF Core Schema & Seed History
+│   ├── Middleware/                 # Custom Rate Limiting & Error Handling logic
+│   ├── Models/                     # Database Entities & DTOs
+│   └── appsettings.json            # Connection Strings & JWT Settings
+│
+├── wwwroot/                        # Frontend Application (Vanilla JS)
+│   ├── index.html                  # Main UI Entry Point
+│   ├── script.js                   # API Integration & Role Logic
+│   └── style.css                   # Custom UI Styling
+│
+├── ContestAPI.txt                  # Postman Collection (Rename to .json)
+└── README.md                       # Documentation & Screenshots
 📸 Functionality Showcase
-
 A. Secure Login & Dashboard
-<img width="1806" height="960" alt="image" src="https://github.com/user-attachments/assets/3e67c3d9-d016-47c3-b998-687d60cd890c" />
+Authenticated entry point. The system uses JWT tokens to manage sessions and identify user roles.
 
 B. Admin Management (Role-Based Access)
-Logged in as SuperAdmin, the red Database Management panel is unlocked.
-<img width="1715" height="915" alt="image" src="https://github.com/user-attachments/assets/6b9da35e-b945-4104-9553-4d58dfeac349" />
-<img width="1770" height="977" alt="image" src="https://github.com/user-attachments/assets/d5bd2ae7-b0a3-42dc-b1f8-17a6cf21273d" />
-
+When logged in as SuperAdmin, the red Database Management panel is dynamically unlocked, allowing for contest deletion.
 
 C. API Protection (Rate Limiting)
-The API blocks excessive requests (3 hits/30s) to ensure stability.
-<img width="1737" height="955" alt="image" src="https://github.com/user-attachments/assets/f2efce5f-98d4-42c7-90bf-a0c6cbb1189e" />
+Custom middleware blocks excessive requests (Limit: 3 hits per 30 seconds) to ensure API stability and prevent brute-force attacks.
 
-D.Normal User showing only normal contests
-<img width="1828" height="692" alt="image" src="https://github.com/user-attachments/assets/96a9853d-b9e3-4ff5-8938-d7cd312b4d78" />
-
+D. Normal User Experience
+Standard users are restricted from administrative views and can only participate in eligible contests.
 
 🏃 Instructions to Run Locally
-1. Database Setup
+1. Database Setup (Migrations)
+The project uses Entity Framework Core Migrations to handle schema creation and seeding.
+
+Using Visual Studio:
+
 Update DefaultConnection in appsettings.json to your local SQL Server instance.
 
-In Package Manager Console, run: Update-Database.
+Open Package Manager Console.
 
-(Optional) Use the Database_Setup.sql file in the root to manually execute schema and seed data.
+Run: Update-Database
 
+Using Command Line (dotnet CLI):
+
+Navigate to the ContestSystem.Api folder.
+
+Run:
+
+Bash
+dotnet ef database update
 2. Launching the Project
 Open ContestSystem.sln and set ContestSystem.Api as the startup project.
 
 Press F5. The API defaults to https://localhost:44344.
 
 ⚠️ Important: Localhost Port Troubleshooting
-If your Visual Studio runs the project on a different port (e.g., 5000 or 7200):
+If your environment runs the project on a different port:
 
-Open script.js in the root folder.
+Open script.js in the wwwroot folder.
 
 Change the first line: const API = "https://localhost:XXXX/api"; (Replace XXXX with your port).
 
 Refresh the browser.
+
+🛠️ Technical Highlights
+JWT Auth: Secure authentication with role-based claims.
+
+Global Error Handling: Custom middleware to return standardized JSON error responses.
+
+Code-First Migrations: Fully versioned database schema.
+
+Security: Implemented Rate Limiting on critical endpoints.
 
 🔑 Test Credentials
 Admin: SuperAdmin / SecretPassword123!
