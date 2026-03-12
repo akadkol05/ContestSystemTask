@@ -1,0 +1,163 @@
+{
+	"info": {
+		"name": "Contest System - Final Submission",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Authentication",
+			"item": [
+				{
+					"name": "Admin Login (Master)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if(jsonData.token) { pm.collectionVariables.set(\"token\", jsonData.token); }",
+									"pm.test('Status is 200', () => pm.response.to.have.status(200));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"SuperAdmin\",\n    \"password\": \"SecretPassword123!\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": "{{baseUrl}}/api/auth/login"
+					}
+				},
+				{
+					"name": "Register Normal User",
+					"request": {
+						"method": "POST",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"NormalUser1\",\n    \"email\": \"user@test.com\",\n    \"password\": \"UserPass123!\",\n    \"role\": \"1\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": "{{baseUrl}}/api/auth/register"
+					}
+				},
+				{
+					"name": "Normal User Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if(jsonData.token) { pm.collectionVariables.set(\"token\", jsonData.token); }"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"NormalUser1\",\n    \"password\": \"UserPass123!\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": "{{baseUrl}}/api/auth/login"
+					}
+				},
+				{
+					"name": "Logout (Auto-Clear Token)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"token\", \"\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+						"method": "POST",
+						"url": "{{baseUrl}}/api/auth/logout"
+					}
+				}
+			]
+		},
+		{
+			"name": "2. Public Data (Guest Access)",
+			"item": [
+				{
+					"name": "View Contests (No Token)",
+					"request": {
+						"method": "GET",
+						"url": "{{baseUrl}}/api/contest"
+					}
+				},
+				{
+					"name": "View Leaderboard",
+					"request": {
+						"method": "GET",
+						"url": "{{baseUrl}}/api/contest/leaderboard"
+					}
+				}
+			]
+		},
+		{
+			"name": "3. User Protected Actions",
+			"item": [
+				{
+					"name": "Submit Quiz (One-Time Only)",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+						"method": "POST",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"contestId\": 1,\n    \"answers\": [\n        { \"questionId\": 1, \"selectedOptionIds\": [1] }\n    ]\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": "{{baseUrl}}/api/contest/submit"
+					}
+				},
+				{
+					"name": "View My Prize History",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+						"method": "GET",
+						"url": "{{baseUrl}}/api/contest/my-history"
+					}
+				}
+			]
+		},
+		{
+			"name": "4. Admin Proof (Strict Roles)",
+			"item": [
+				{
+					"name": "View All User Submissions (Role 3 Only)",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+						"method": "GET",
+						"url": "{{baseUrl}}/api/contest/admin/all-submissions"
+					}
+				},
+				{
+					"name": "DELETE Contest (Role 3 Only)",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+						"method": "DELETE",
+						"url": "{{baseUrl}}/api/contest/admin/delete-contest/1"
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{ "key": "baseUrl", "value": "https://localhost:44344" },
+		{ "key": "token", "value": "" }
+	]
+}
