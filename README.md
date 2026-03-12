@@ -24,6 +24,7 @@ State Management: Securely handles JWT storage and session persistence.
 Asynchronous Operations: Clean fetch calls with try/catch error handling.
 
 📸 Functionality Showcase
+
 A. Secure Login & Dashboard
 <img width="1806" height="960" alt="image" src="https://github.com/user-attachments/assets/3e67c3d9-d016-47c3-b998-687d60cd890c" />
 
