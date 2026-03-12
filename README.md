@@ -10,13 +10,21 @@ Source Code: https://github.com/akadkol05/ContestSystemTask
 Plaintext
 ContestSystemTask/
 ├── ContestSystem.sln               # Root Solution File
+
 │
+
 ├── ContestSystem.Api/              # Backend Project (ASP.NET Core 7.0)
+
 │   ├── Controllers/                # API Endpoints (Auth, Contests, Submissions)
+
 │   ├── Data/                       # ApplicationDbContext & DB Configurations
+
 │   ├── Migrations/                 # EF Core Schema & Seed History (Code-First)
+
 │   ├── Middleware/                 # Custom Rate Limiting & Error Handling logic
+
 │   ├── Models/                     # Database Entities & DTOs
+
 │   └── appsettings.json            # Connection Strings & JWT Settings
 │
 ├── wwwroot/                        # Frontend Application (Vanilla JS)
@@ -28,6 +36,7 @@ ContestSystemTask/
 └── README.md                       # Documentation & Screenshots
 
 📸 Functionality Showcase
+
 A. Secure Login & Dashboard
 <img width="1806" height="960" alt="image" src="https://github.com/user-attachments/assets/3e67c3d9-d016-47c3-b998-687d60cd890c" />
 
