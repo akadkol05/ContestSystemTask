@@ -1,4 +1,4 @@
-# 🏆 ContestMaster Pro - Technical Submission
+I apologize for that! I see that the Postman documentation and the specific endpoint table were missing from your previous file view. I have reintegrated them into this complete, raw Markdown block so your documentation is 100% comprehensive.📋 Full README (Including Postman & Migrations)Copy the content below and paste it directly into your GitHub editor:Markdown# 🏆 ContestMaster Pro - Technical Submission
 
 A robust, full-stack Contest Management System designed with a focus on **Security**, **Scalability**, and **User Experience**. Built using **ASP.NET Core 7.0** and **Vanilla JavaScript**.
 
@@ -30,48 +30,8 @@ ContestMasterPro/
 │
 ├── ContestAPI.json                 # Postman Collection (Import for API testing)
 └── README.md                       # Documentation & Screenshots
-📸 Functionality Showcase
-A. Secure Login & Dashboard
-Authenticated entry point using JWT. The UI dynamically adapts based on the user's role.
 
-B. Admin Management (Role-Based Access)
-Logged in as SuperAdmin, the red Admin Database Management panel is unlocked, allowing for contest deletion.
-
-C. Confirmation Safety Dialog
-Built-in safety checks to prevent accidental data deletion.
-
-D. API Protection (Rate Limiting)
-The API includes a security layer that blocks excessive requests via custom middleware to ensure stability.
-
-E. Normal User Experience
-Standard users see a restricted view, showing only public contests without administrative tools.
-
-🏃 Instructions to Run Locally
-1. Database Setup (EF Core Migrations)
-The project uses Code-First migrations to build the schema. No manual SQL scripts are required.
-
-Method 1: Visual Studio (Package Manager Console)
-
-PowerShell
-Update-Database
-Method 2: Command Line (dotnet CLI)
-
-Bash
-cd ContestSystem.Api
+📸 Functionality ShowcaseA. Secure Login & DashboardAuthenticated entry point using JWT. The UI dynamically adapts based on the user's role.B. Admin Management (Role-Based Access)Logged in as SuperAdmin, the red Admin Database Management panel is unlocked, allowing for contest deletion.C. Confirmation Safety DialogBuilt-in safety checks to prevent accidental data deletion.D. API Protection (Rate Limiting)The API includes a security layer that blocks excessive requests via custom middleware to ensure stability.E. Normal User ExperienceStandard users see a restricted view, showing only public contests without administrative tools.🧪 API Endpoints & PostmanThe project includes a ContestAPI.json for rapid testing. Import this into Postman to access the following endpoints:CategoryEndpointMethodAuthDescriptionAuth/api/auth/loginPOSTPublicGet JWT Token & User RoleAuth/api/auth/registerPOSTPublicCreate new accountContest/api/contestGETPublicFetch all available contestsUser/api/contest/submitPOSTBearerSubmit quiz answersAdmin/api/contest/admin/all-submissionsGETAdminView all user resultsAdmin/api/contest/admin/delete-contest/{id}DELETEAdminDelete a specific contest🏃 Instructions to Run Locally1. Database Setup (EF Core Migrations)The project uses Code-First migrations to build the schema. No manual SQL scripts are required.Method 1: Visual Studio (Package Manager Console)PowerShellUpdate-Database
+Method 2: Command Line (dotnet CLI)Bashcd ContestSystem.Api
 dotnet ef database update
-2. Launching the Project
-Open ContestSystem.sln and set ContestSystem.Api as the startup project.
-
-Press F5. The API defaults to https://localhost:44344.
-
-🛠️ Technical Highlights
-Global Error Handling: Custom middleware catches server exceptions to return standardized JSON errors.
-
-Security: JWT-based Auth + Custom Rate Limiting middleware.
-
-Clean Code: Strict separation of concerns (Controllers -> Services -> Data).
-
-🔑 Test Credentials
-Admin: SuperAdmin / SecretPassword123!
-
-User: NormalUser1 / UserPass123!
+2. Launching the ProjectOpen ContestSystem.sln and set ContestSystem.Api as the startup project.Press F5. The API defaults to https://localhost:44344.⚠️ Important: Localhost Port TroubleshootingIf your local environment runs on a different port:Open script.js in the wwwroot folder.Change the first line: const API = "https://localhost:XXXX/api"; (Replace XXXX with your port).🛠️ Technical HighlightsGlobal Error Handling: Custom middleware catches server exceptions to return standardized JSON errors.Security: JWT-based Auth + Custom Rate Limiting middleware.Clean Code: Strict separation of concerns (Controllers -> Services -> Data).🔑 Test CredentialsAdmin: SuperAdmin / SecretPassword123!User: NormalUser1 / UserPass123!
