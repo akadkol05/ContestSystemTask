@@ -25,11 +25,21 @@ Asynchronous Operations: Clean fetch calls with try/catch error handling.
 
 📸 Functionality Showcase
 A. Secure Login & Dashboard
+<img width="1806" height="960" alt="image" src="https://github.com/user-attachments/assets/3e67c3d9-d016-47c3-b998-687d60cd890c" />
+
 B. Admin Management (Role-Based Access)
 Logged in as SuperAdmin, the red Database Management panel is unlocked.
+<img width="1715" height="915" alt="image" src="https://github.com/user-attachments/assets/6b9da35e-b945-4104-9553-4d58dfeac349" />
+<img width="1770" height="977" alt="image" src="https://github.com/user-attachments/assets/d5bd2ae7-b0a3-42dc-b1f8-17a6cf21273d" />
+
 
 C. API Protection (Rate Limiting)
 The API blocks excessive requests (3 hits/30s) to ensure stability.
+<img width="1737" height="955" alt="image" src="https://github.com/user-attachments/assets/f2efce5f-98d4-42c7-90bf-a0c6cbb1189e" />
+
+D.Normal User showing only normal contests
+<img width="1828" height="692" alt="image" src="https://github.com/user-attachments/assets/96a9853d-b9e3-4ff5-8938-d7cd312b4d78" />
+
 
 🏃 Instructions to Run Locally
 1. Database Setup
