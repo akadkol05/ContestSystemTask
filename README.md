@@ -31,19 +31,6 @@ ContestSystemTask/
 ├── ContestAPI.json                 # Postman Collection
 └── README.md                       # Documentation & Screenshots
 
-Gemini said
-I understand—it’s frustrating when you want it to look sharp and the formatting keeps getting messed up.
-
-Markdown on GitHub doesn't support custom CSS/styles (like colors or font-weights) directly in a README. It only supports Standard Markdown. If you are trying to copy-paste the "colored" version from our chat, it will lose the colors because GitHub strips them.
-
-To get the best possible look on GitHub that won't break, use the "Raw" code below. I have used Standard GitHub Markdown (tables, code blocks, and bolding) which GitHub is designed to render perfectly.
-
-Paste this EXACTLY into your README.md:
-Markdown
-# 🏆 ContestMaster Pro - Technical Submission
-
-A robust, full-stack Contest Management System designed with a focus on **Security**, **Scalability**, and **User Experience**. Built using **ASP.NET Core 7.0** and **Vanilla JavaScript**.
-
 ---
 
 ## 🚀 Live Demo & Source
@@ -72,7 +59,9 @@ ContestSystemTask/
 │
 ├── ContestAPI.json                 # Postman Collection
 └── README.md                       # Documentation & Screenshots
+
 📸 Functionality Showcase
+
 A. Secure Login & Dashboard
 Authenticated entry point using JWT. The UI dynamically adapts based on the user's role.
 
